@@ -10,6 +10,7 @@ import {
   ValidationPipe,
   Patch,
   UseGuards,
+  Logger,
 } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 
@@ -25,10 +26,14 @@ import { GetUser } from 'src/auth/get-user.decorator';
 @Controller('boards')
 @UseGuards(AuthGuard())
 export class BoardsController {
+  private logger = new Logger('여기는 BoardsController입니다.');
   constructor(private boardsService: BoardsService) {}
 
   @Get()
   getAllBoard(@GetUser() user: User): Promise<Board[]> {
+    this.logger.verbose(
+      `${user.username} 사용자가 모든 게시물을 가져오고 있습니다.`,
+    );
     return this.boardsService.getAllBoards(user);
   }
 
@@ -38,6 +43,9 @@ export class BoardsController {
     @Body() createBoardDto: CreateBoardDto,
     @GetUser() user: User,
   ): Promise<Board> {
+    this.logger.verbose(
+      `${user.username} 사용자가 새로운 게시물을 생성하고 있습니다. Payload: ${JSON.stringify(createBoardDto)}`,
+    );
     return this.boardsService.createBoard(createBoardDto, user);
   }
 
