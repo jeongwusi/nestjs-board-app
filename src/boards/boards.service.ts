@@ -41,8 +41,8 @@ export class BoardsService {
     if (!found) throw new NotFoundException(`${id} 게시물을 찾을 수 없습니다.`);
     return found;
   }
-  async deleteBoard(id: number): Promise<void> {
-    const result = await this.boardRepository.delete(id);
+  async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.boardRepository.delete({ id, user });
 
     if (result.affected === 0)
       throw new NotFoundException(`${id} 게시물을 찾을 수 없어요.`);
